@@ -31,15 +31,15 @@ body {
 .display {
   width: 100%;
   height: 70px;
-  background: #000;
-  color: #00ff99;
+  background: #111;
+  color: #00ffe0;
   font-size: 2rem;
   text-align: right;
   padding: 15px;
   border: none;
   border-radius: 12px;
   margin-bottom: 25px;
-  box-shadow: inset 0 0 10px #00ffcc;
+  box-shadow: inset 0 0 10px #00ffe0;
   outline: none;
 }
 
@@ -94,4 +94,64 @@ body {
 .btn:nth-child(20):hover {
   background: #27ae60;
   box-shadow: 0 0 15px #2ecc71, inset 0 0 5px #2ecc71;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  transform: translateX(0);
+  background: #111;
+  border: 1px solid #00ffe0;
+  border-radius: 25px;
+  padding: 5px;
+  box-shadow: 0 0 10px #00ffe0;
+  z-index: 100;
+  min-width: 170px;
+}
+
+.dropdown-menu div {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.dropdown-menu i {
+  color: #00ffe0;
+  font-size: 16px;
+  width: 20px; /* garante alinhamento */
+  text-align: center;
+}
+
+.menu-item {
+  display: block;
+  width: 100%;
+  background: #111;
+  font-weight: bold;
+  font-size: 0.7rem;
+  color: #00ffe0;
+  border: none;
+  padding: 8px;
+  margin: 5px 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.menu-item:hover {
+  color: #fff;
+  transform: translateY(-3px);
+  border-radius: 15px;
+}
+
+.fa-solid:hover {
+  color: #fff;
+  transform: translateY(-3px);
+  border-radius: 15px;
 }
