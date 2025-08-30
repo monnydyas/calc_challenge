@@ -1,51 +1,106 @@
-const display = document.querySelector(".display");
-const buttons = document.querySelectorAll(".btn");
-const dropdownBtn = document.querySelector(".icon-btn");
-const dropdownMenu = document.querySelector(".dropdown-menu");
-const toggle = document.getElementById("conversionToggle");
-const text = document.querySelector(".switch-text");
+const display = document.querySelector(".display"); // pega o display
+const buttons = document.querySelectorAll("button"); // pega todos os botões
+const dropdownBtn = document.querySelector(".icon-btn"); // pega o icone do dropdown
+const dropdownMenu = document.querySelector(".dropdown-menu"); // pega o dropdown
+const toggle = document.getElementById("conversionToggle"); // pega o switch button
+const text = document.querySelector(".switch-text"); // texto do switch
 
-buttons.forEach((buttons) => {
-  buttons.addEventListener("click", () => {
-    const value = buttons.textContent;
+// Função que normaliza os símbolos e avalia
+function calculate(expr) {
+  try {
+    // normaliza símbolos de multiplicação/divisão no JS
+    expr = expr.replace(/[x×✕*]/g, "*").replace(/[÷\/]/g, "/");
 
-    if (buttons.classList.contains("clear")) {
+    // retira os operadores pendentes no final (ex: "2+")
+    expr = expr.replace(/[+\-*/%]+$/, "");
+
+    // capta erro de divisão por zero
+    if (/\/0(?!\d)/.test(expr)) return "Erro";
+
+    // avalia com precedência normal do JS
+    return Function('"use strict"; return (' + expr + ")")();
+  } catch {
+    return "Erro";
+  }
+}
+
+// lista de operadores que aceitamos tipo / e ÷ e outras variantes)
+const operators = ["+", "-", "x", "×", "*", "/", "÷", "%"];
+
+// listener para o button
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const value = button.textContent.trim();
+
+    // limpar a calc
+    if (button.classList.contains("clear")) {
       display.value = "";
-    } else if (buttons.classList.contains("delete")) {
-      display.value = display.value.slice(0, -1);
-    } else if (buttons.classList.contains("equal")) {
-      try {
-        // Substitui símbolos visuais pelos operadores JS
-        let expr = display.value.replace(/x/g, "*").replace(/÷/g, "/");
-        display.value = eval(expr);
-      } catch {
-        display.value = "Error";
-      }
-    } else if (!isNaN(value) || value === ".") {
-      // lógica do ponto decimal
-      display.value += value;
-    } else {
-      display.value += value;
+      return;
     }
+
+    // deletar último
+    if (button.classList.contains("delete")) {
+      display.value = display.value.slice(0, -1);
+      return;
+    }
+
+    // calcular
+    if (button.classList.contains("equal")) {
+      const result = calculate(display.value);
+      display.value = String(result);
+      return;
+    }
+
+    // permite só um ponto por número
+    if (value === ".") {
+      const lastNumber = display.value.split(/[+\-x×\*\/÷%]/).pop();
+      if (!lastNumber.includes(".")) {
+        display.value += ".";
+      }
+      return;
+    }
+
+    // números
+    if (!isNaN(value)) {
+      display.value += value;
+      return;
+    }
+
+    // operadores (inclui /)
+    if (operators.includes(value)) {
+      // não adiciona nenhum operador se o display estiver vazio ou se tiver um operador no final
+      if (display.value !== "" && !/[+\-x×\*\/÷%]$/.test(display.value)) {
+        display.value += value;
+      }
+      return;
+    }
+
+    // Ignora outros botões inesperados
   });
 });
 
+// Dropdown
 window.addEventListener("DOMContentLoaded", () => {
-  dropdownMenu.style.display = "none";
+  if (dropdownMenu) dropdownMenu.style.display = "none";
 });
 
-dropdownBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  dropdownMenu.style.display =
-    dropdownMenu.style.display === "block" ? "none" : "block";
-});
+if (dropdownBtn) {
+  dropdownBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdownMenu.style.display =
+      dropdownMenu.style.display === "block" ? "none" : "block";
+  });
+}
 
 window.addEventListener("click", (e) => {
-  if (!e.target.closest(".dropdown")) {
-    dropdownMenu.style.display = "none";
+  if (!e.target.closest || !e.target.closest(".dropdown")) {
+    if (dropdownMenu) dropdownMenu.style.display = "none";
   }
 });
 
-toggle.addEventListener("change", () => {
-  text.textContent = toggle.checked ? "ON" : "OFF";
-});
+// Toggle - botao switch liga-desliga
+if (toggle) {
+  toggle.addEventListener("change", () => {
+    if (text) text.textContent = toggle.checked ? "ON" : "OFF";
+  });
+}
