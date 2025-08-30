@@ -15,7 +15,7 @@ function calculate(expr) {
     expr = expr.replace(/[+\-*/%]+$/, "");
 
     // capta erro de divisão por zero
-    if (/\/0(?!\d)/.test(expr)) return "Erro";
+    if (/\/0(?!\d)/.test(expr)) return "Undefined";
 
     // avalia com precedência normal do JS
     return Function('"use strict"; return (' + expr + ")")();
