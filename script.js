@@ -15,10 +15,15 @@ buttons.forEach((buttons) => {
       display.value = display.value.slice(0, -1);
     } else if (buttons.classList.contains("equal")) {
       try {
-        display.value = eval(display.value.replace("÷", "/").replace("x", "*"));
+        // Substitui símbolos visuais pelos operadores JS
+        let expr = display.value.replace(/x/g, "*").replace(/÷/g, "/");
+        display.value = eval(expr);
       } catch {
         display.value = "Error";
       }
+    } else if (!isNaN(value) || value === ".") {
+      // lógica do ponto decimal
+      display.value += value;
     } else {
       display.value += value;
     }
