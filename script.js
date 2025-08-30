@@ -2,6 +2,8 @@ const display = document.querySelector(".display");
 const buttons = document.querySelectorAll(".btn");
 const dropdownBtn = document.querySelector(".icon-btn");
 const dropdownMenu = document.querySelector(".dropdown-menu");
+const toggle = document.getElementById("conversionToggle");
+const text = document.querySelector(".switch-text");
 
 buttons.forEach((buttons) => {
   buttons.addEventListener("click", () => {
@@ -23,21 +25,22 @@ buttons.forEach((buttons) => {
   });
 });
 
-// Garantir que começa escondido ao carregar a página
 window.addEventListener("DOMContentLoaded", () => {
   dropdownMenu.style.display = "none";
 });
 
-// Alterna mostrar/esconder ao clicar no botão
 dropdownBtn.addEventListener("click", (e) => {
-  e.stopPropagation(); // <-- impede o clique de subir até o window
+  e.stopPropagation();
   dropdownMenu.style.display =
     dropdownMenu.style.display === "block" ? "none" : "block";
 });
 
-// Fecha se clicar fora
 window.addEventListener("click", (e) => {
   if (!e.target.closest(".dropdown")) {
     dropdownMenu.style.display = "none";
   }
+});
+
+toggle.addEventListener("change", () => {
+  text.textContent = toggle.checked ? "ON" : "OFF";
 });
